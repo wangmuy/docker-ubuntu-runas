@@ -1,4 +1,4 @@
-Run as specified uid,gid(username=duser) on Ubuntu:16.04
+Run as specified uid,gid(default username=duser) on Ubuntu:16.04
 
 Run as root(start bash if args leaved empty):
 
@@ -24,7 +24,7 @@ chmod +x start_private.sh
 docker run --rm -it -v $(pwd)/start_private.sh:/scripts/start_private.sh -e USER_ID=1000 -e GROUP_ID=1000 ubuntu-runas
 ```
 
-Execute a script after changing to duser:
+Execute a script after changing to USERNAME=john:
 
 ```shell
 cat << 'EOF' > start-user_private.sh
@@ -32,5 +32,5 @@ cat << 'EOF' > start-user_private.sh
 EOF
 chmod +x start-user_private.sh
 
-docker run --rm -it -v $(pwd)/start-user_private.sh:/scripts/start-user_private.sh -e USER_ID=1000 -e GROUP_ID=1000 ubuntu-runas
+docker run --rm -it -v $(pwd)/start-user_private.sh:/scripts/start-user_private.sh -e USER_NAME=john -e USER_ID=1000 -e GROUP_ID=1000 ubuntu-runas
 ```
