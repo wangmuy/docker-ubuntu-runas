@@ -1,4 +1,4 @@
-FROM ubuntu:16.04
+FROM ubuntu:20.04
 MAINTAINER Zhongdi Wang <wangmuy@gmail.com>
 
 ENV DEBIAN_FRONTEND noninteractive
