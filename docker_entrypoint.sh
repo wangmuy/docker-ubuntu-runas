@@ -1,5 +1,5 @@
 #!/bin/bash
-#set -e
+set -x
 
 # This script designed to be used a docker ENTRYPOINT "workaround" missing docker
 # feature discussed in docker/docker#7198, allow to have executable in the docker
@@ -17,13 +17,14 @@
 if [ -z ${USER_ID+x} ]; then USER_ID=1000; fi
 if [ -z ${GROUP_ID+x} ]; then GROUP_ID=1000; fi
 if [ -z ${USER_NAME+x} ]; then USER_NAME="duser"; fi
-
+duser_byid="$(id -nu $USER_ID 2>/dev/null)"
+[ -n "$duser_byid" ] && USER_NAME=$duser_byid
 old_duser="$(id -u $USER_NAME 2>/dev/null)"
 [ -n "$old_duser" ] && USER_ID=$old_duser
 id -g $USER_NAME > /dev/null 2>&1 && GROUP_ID=$(id -g $USER_NAME)
 export USER_ID GROUP_ID USER_NAME
 
-if [ -z "$old_duser" -a "${USER_ID}" != "0" ]; then
+if [ -z "$old_duser" -a "${USER_ID}" != "0" -a "$UID" == "0" ]; then
   msg="docker_entrypoint: Creating user UID/GID [$USER_ID/$GROUP_ID]" && echo $msg
   groupadd -g $GROUP_ID -r $USER_NAME && \
   useradd -u $USER_ID --create-home -r -g $USER_NAME $USER_NAME
